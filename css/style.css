@@ -1,0 +1,17 @@
+.login_container {
+    padding: 4rem;
+    display: grid;
+    border-radius: 1rem;
+    height: 10rem;
+}
+
+.login_container input[type="text"] {
+    width:50%;
+}
+
+
+.login_container .btn {
+    width: max-content;
+    cursor: pointer;
+    margin-top: 1rem;
+}
