@@ -24,8 +24,9 @@ function handleFormData($db) {
         // }
         // Hash the password
 
+
         // Prepare the SQL statement to prevent SQL injection
-        $sql = "INSERT INTO staff_login (name, email, password,contents) 
+        $sql = "INSERT INTO staff_login (`name`, `email`, `password`,`contents`) 
         VALUES (:name, :email, :password, :contents)";
 
         $stmt = $db->prepare($sql);
@@ -40,7 +41,10 @@ function handleFormData($db) {
         // Execute the prepared statement
         try{
             if ($stmt->execute()) {
-                echo "Your record has been stored successfully.";
+                echo "<script>
+                        alert('Form submitted successfully!');
+                        window.location.href = 'login.php';
+                    </script>";
             } else {
                 echo "Error: Unable to save your record.";
             }

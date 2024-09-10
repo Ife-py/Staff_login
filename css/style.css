@@ -9,6 +9,9 @@
     width:50%;
 }
 
+.login_container input[type="email"] {
+    width: 50%;
+}
 
 .login_container .btn {
     width: max-content;
