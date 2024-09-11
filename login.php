@@ -12,5 +12,5 @@ include("./views/header.php");
     <input type="text" class="form-control" id="Password"  name="password" placeholder="Password" autocomplete="off">
     <label for="Password">Password</label>
   </div>
-  <button type="submit" class="btn btn-primary">Login</button>
+  <button type="submit" value="login" class="btn btn-primary">Login</button>
 </form>

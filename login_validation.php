@@ -1,13 +1,16 @@
 <?php 
-include("./database.php")
+session_start();
+include("./database.php");
 ?>
 <?php 
 function form_handling($db){
-    if($_SERVER["REQUEST_METHOD"]=="POST"){
+    if($_SERVER["REQUEST_METHOD"]!=="POST"){
         // fetching data from text field
-        $email=$_POST['email'] ?? '';
-        $password=$_POST['password'] ?? '';
+        return;
     }
+
+    $email=$_POST['email'] ?? '';
+    $password=$_POST['password'] ?? '';
 
     if(empty($email)||empty($password)){
         echo "Please fill all fields";
@@ -16,27 +19,25 @@ function form_handling($db){
 
     try {
         // Query the database for email and password
-        $stmt = $db->query("SELECT email, password FROM staff_login");
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        $is_authenticated=false;
+       $stmt = $db->prepare("SELECT id, email, password FROM staff_login WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        foreach ($rows as $row) {
-            if ($row['email'] == $email && $row['password']) {
-                echo "Login successful";
-                $is_authenticated = true;
-                break;  // Stop the loop once authenticated
-            }
-        }
-    
-        if (!$is_authenticated) {
+        if ($row && $row['password'] === $password){
+            $_SESSION['user_id'] = $row['id'];
+            echo "<script>
+                    alert('Form submitted successfully!');
+                    window.location.href = 'dashboard.php';
+                  </script>";
+        } else {
             echo "Login failed. Invalid email or password";
         }
     } catch (Exception $e) {
         echo "Data could not be retrieved from the database: " . $e->getMessage();
         exit;// Message if no match is found   
         }
-}
+    }   
 
 
 form_handling($db);
