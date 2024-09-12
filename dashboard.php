@@ -60,67 +60,76 @@ $username=$user['name'];
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Management</title>
 </head>
 <body>
   <h2><b>Welcome, <?php echo $username;?>!</b></h2>
 </body>
-<table class="table table-hover">
-  <thead>
-    <tr class="table-primary">
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Brief introduction</th>
-      <th scope="col">Sign in</th>
-      <th scope="col">Sign Out</th>
-    </tr>
-  </thead>
-  <tbody>
-      <?php $members=get_members($db) ?>
-      <tr class="table-secondary">
-      <?php foreach($members as $member): ?>
-      <tr>
-        <td><?php echo htmlspecialchars($member['name']); ?></td>
-        <td><?php echo htmlspecialchars($member['email']); ?></td>
-        <td><?php echo htmlspecialchars($member['contents']); ?></td>
-        <td>
-          <form method="post" action="">
-            <button type="submit" name="sign_in">Sign In</button>
-          </form>
-        </td>
-        <td>
-          <form method="post" action="">
-            <button type="submit" name="sign_out">Sign Out</button>
-          </form>
-        </td>
-      </tr>
-      <?php endforeach ;?>
-      <?php if (empty($members)): ?>
-          <tr>
-              <td colspan="3">No members found.</td>
+<div class="container">
+  <div class="row pt-5">
+    <div class="col-md-2"></div>
+    <div class="col-md-8"></div>
+      <table class="table table-hover">
+        <thead>
+          <tr class="table-primary">
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Brief introduction</th>
+            <th scope="col">Sign in</th>
+            <th scope="col">Sign Out</th>
           </tr>
-      <?php endif; ?>
-  </tbody>
-</table>
-<a href="logout.php" class="btn btn-primary">Logout</a>
+        </thead>
+        <tbody>
+            <?php $members=get_members($db) ?>
+            <tr class="table-secondary">
+            <?php foreach($members as $member): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($member['name']); ?></td>
+              <td><?php echo htmlspecialchars($member['email']); ?></td>
+              <td><?php echo htmlspecialchars($member['contents']); ?></td>
+              <td>
+                <form method="post" action="">
+                  <button type="submit" name="sign_in">Sign In</button>
+                </form>
+              </td>
+              <td>
+                <form method="post" action="">
+                  <button type="submit" name="sign_out">Sign Out</button>
+                </form>
+              </td>
+            </tr>
+            <?php endforeach ;?>
+            <?php if (empty($members)): ?>
+                <tr>
+                    <td colspan="3">No members found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+      </table>
+  </div>
+  <div class="col-md-2"></div>
+  </div>
+<div class="container">
+  <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
+</div>
 
 
 <?php if (isset($message)) echo "<p>$message</p>"; ?>
+<div class="container">
+  <h3><b>Current Session Details</b></h3>
+  <?php
+  $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id ORDER BY id DESC LIMIT 1");
+  $stmt->bindParam(':user_id', $user_id);
+  $stmt->execute();
+  $lastSession = $stmt->fetch(PDO::FETCH_ASSOC);
 
-<h3><b>Current Session Details</b></h3>
-<?php
-$stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id ORDER BY id DESC LIMIT 1");
-$stmt->bindParam(':user_id', $user_id);
-$stmt->execute();
-$lastSession = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($lastSession) {
-  echo "<p><b>Sign-in Time:</b> " . ($lastSession['check_in_time'] ? $lastSession['check_in_time'] : "N/A") . "</p>";
-  echo "<p><b>Sign-out Time: </b>" . ($lastSession['check_out_time'] ? $lastSession['check_out_time'] : "N/A") . "</p>";
-} else {
-  echo "<p><b>No session data available.</b></p>";
-}
-?>
+  if ($lastSession) {
+    echo "<p><b>Sign-in Time:</b> " . ($lastSession['check_in_time'] ? $lastSession['check_in_time'] : "N/A") . "</p>";
+    echo "<p><b>Sign-out Time: </b>" . ($lastSession['check_out_time'] ? $lastSession['check_out_time'] : "N/A") . "</p>";
+  } else {
+    echo "<p><b>No session data available.</b></p>";
+  }
+  ?>
+      
 <h3><b>Previous Sessions:</b></h3>
 <?php 
 $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id AND check_out_time IS NOT NULL ORDER BY check_in_time DESC");
@@ -129,28 +138,26 @@ $stmt->execute();
 $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<table class="table table-hover">
-  <thead>
-    <tr class="table-primary">
-      <th scope="col">Id</th>
-      <th scope="col">Check In Time</th>
-      <th scope="col">Check Out Time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="table-secondary">
-    <?php foreach($previousSessions as $session) {?>
-      <tr>
-        <td><?php echo htmlspecialchars($session['id']); ?></td>
-        <td><?php echo htmlspecialchars($session['check_in_time']); ?></td>
-        <td><?php echo htmlspecialchars($session['check_out_time']); ?></td>
+<div class="container">
+  <table class="table table-hover">
+    <thead>
+      <tr class="table-primary">
+        <th scope="col">Id</th>
+        <th scope="col">Check In Time</th>
+        <th scope="col">Check Out Time</th>
       </tr>
-    </tr>
-  </tbody>
-
-
+    </thead>
+    <tbody>
+      <tr class="table-secondary">
+      <?php foreach($previousSessions as $session) {?>
+        <tr>
+          <td><?php echo htmlspecialchars($session['id']); ?></td>
+          <td><?php echo htmlspecialchars($session['check_in_time']); ?></td>
+          <td><?php echo htmlspecialchars($session['check_out_time']); ?></td>
+        </tr>
+      </tr>
+    </tbody>
     <?php } ?>
-</ul>
 
 </body>
 </html>

@@ -1,19 +1,20 @@
-<?php 
-include("./database.php")?>
+<?php
+include("./database.php") ?>
 <?php
 // Function to handle form data
 
-function handleFormData($db) {
+function handleFormData($db)
+{
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Fetch form data securely
-        $name = $_POST['name']??'';
-        $email = $_POST['email']??'';
-        $password =$_POST['password']??'';
-        $contents =  $_POST['contents']??''; // Corrected the field name
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $contents =  $_POST['contents'] ?? ''; // Corrected the field name
         // $formFile = $_FILES['Formfile']??null; // Corrected the field name and used $_FILES for file uploads
 
 
-        if (empty($name)||empty($email)||empty($password)){
+        if (empty($name) || empty($email) || empty($password)) {
             echo "Please fill in all fields.";
             return;
         }
@@ -39,7 +40,7 @@ function handleFormData($db) {
         // $stmt->bindParam(':image_name', $formFile['name']); // Use the file name
 
         // Execute the prepared statement
-        try{
+        try {
             if ($stmt->execute()) {
                 echo "<script>
                         alert('Form submitted successfully!');
@@ -48,8 +49,8 @@ function handleFormData($db) {
             } else {
                 echo "Error: Unable to save your record.";
             }
-        }catch(Exception $e){
-            echo"An error occured:".$e->getMessage();
+        } catch (Exception $e) {
+            echo "An error occured:" . $e->getMessage();
         }
     }
 }
