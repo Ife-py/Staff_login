@@ -63,11 +63,11 @@ $username=$user['name'];
     <title>User Management</title>
 </head>
 <body>
-  <h2>Welcome, <?php echo $username;?>!</h2>
+  <h2><b>Welcome, <?php echo $username;?>!</b></h2>
 </body>
 <table class="table table-hover">
   <thead>
-    <tr>
+    <tr class="table-primary">
       <th scope="col">Name</th>
       <th scope="col">Email</th>
       <th scope="col">Brief introduction</th>
@@ -77,7 +77,7 @@ $username=$user['name'];
   </thead>
   <tbody>
       <?php $members=get_members($db) ?>
-      <tr class="table-primary">
+      <tr class="table-secondary">
       <?php foreach($members as $member): ?>
       <tr>
         <td><?php echo htmlspecialchars($member['name']); ?></td>
@@ -107,7 +107,7 @@ $username=$user['name'];
 
 <?php if (isset($message)) echo "<p>$message</p>"; ?>
 
-<h2>Current Session Details</h2>
+<h3><b>Current Session Details</b></h3>
 <?php
 $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id ORDER BY id DESC LIMIT 1");
 $stmt->bindParam(':user_id', $user_id);
@@ -115,13 +115,13 @@ $stmt->execute();
 $lastSession = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($lastSession) {
-  echo "<p>Check-in Time: " . ($lastSession['check_in_time'] ? $lastSession['check_in_time'] : "N/A") . "</p>";
-  echo "<p>Check-out Time: " . ($lastSession['check_out_time'] ? $lastSession['check_out_time'] : "N/A") . "</p>";
+  echo "<p><b>Sign-in Time:</b> " . ($lastSession['check_in_time'] ? $lastSession['check_in_time'] : "N/A") . "</p>";
+  echo "<p><b>Sign-out Time: </b>" . ($lastSession['check_out_time'] ? $lastSession['check_out_time'] : "N/A") . "</p>";
 } else {
-  echo "<p>No session data available.</p>";
+  echo "<p><b>No session data available.</b></p>";
 }
 ?>
-<h2>Previous Sessions:</h2>
+<h3><b>Previous Sessions:</b></h3>
 <?php 
 $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id AND check_out_time IS NOT NULL ORDER BY check_in_time DESC");
 $stmt->bindParam(':user_id', $user_id);
@@ -129,14 +129,24 @@ $stmt->execute();
 $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-?>
-<ul>
-  <?php foreach($previousSessions as $session) {?>
-    <li>
-      Session ID:<?php echo $session['id'];?><br>
-      Sign-in Time:<?php echo $session['check_in_time'] ?><br>
-      Sign-out Time :<?php echo $session['check_out_time'] ?><br>
-    </li>
+<table class="table table-hover">
+  <thead>
+    <tr class="table-primary">
+      <th scope="col">Id</th>
+      <th scope="col">Check In Time</th>
+      <th scope="col">Check Out Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="table-secondary">
+    <?php foreach($previousSessions as $session) {?>
+      <tr>
+        <td><?php echo htmlspecialchars($session['id']); ?></td>
+        <td><?php echo htmlspecialchars($session['check_in_time']); ?></td>
+        <td><?php echo htmlspecialchars($session['check_out_time']); ?></td>
+      </tr>
+    </tr>
+  </tbody>
 
 
     <?php } ?>
