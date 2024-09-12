@@ -1,5 +1,5 @@
 <?php 
-
+// Creating connection to the database
 try {
     $db = new PDO("mysql:host=localhost;dbname=staff login", "root", ""); // Corrected the DSN format
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -10,6 +10,7 @@ try {
 }
 
 
+// A function to fetch all data from the database
 function get_members($db){
     try{
         $results=$db->query("SELECT name ,email ,password ,contents from staff_login");

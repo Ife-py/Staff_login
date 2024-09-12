@@ -31,7 +31,12 @@ function form_handling($db){
                     window.location.href = 'dashboard.php';
                   </script>";
         } else {
-            echo "Login failed. Invalid email or password";
+            echo "
+            <script>
+                alert('Login failed. Invalid email or password!');
+                window.location.href = 'login.php';
+            </script>";
+            ;
         }
     } catch (Exception $e) {
         echo "Data could not be retrieved from the database: " . $e->getMessage();

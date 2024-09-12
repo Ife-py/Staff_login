@@ -66,6 +66,16 @@ $username=$user['name'];
 </body>
 <div class="container">
   <div class="row pt-5">
+    <div class="col-md-2">
+      <div class="container">
+        <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
+      </div>
+    </div>
+    <div class="col-md-8"></div>
+    <div class="col-md-2"></div>
+
+<div class="container">
+  <div class="row pt-5">
     <div class="col-md-2"></div>
     <div class="col-md-8"></div>
       <table class="table table-hover">
@@ -108,9 +118,6 @@ $username=$user['name'];
   </div>
   <div class="col-md-2"></div>
   </div>
-<div class="container">
-  <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
-</div>
 
 
 <?php if (isset($message)) echo "<p>$message</p>"; ?>

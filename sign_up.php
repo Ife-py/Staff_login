@@ -12,12 +12,6 @@ include("views/header.php") ?>
                     <div class="card-body">
                         <form action="form.php" method="post">
                             <fieldset>
-                                <div class="row">
-                                    <label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="email@example.com">
-                                    </div>
-                                </div>
                                 <div>
                                     <label for="name" class="form-label mt-4"><b>Name</b></label>
                                     <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter your name:" required>
