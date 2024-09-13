@@ -8,6 +8,7 @@
     <title>Test</title>
 </head>
 <body>
+  <?php if(!isset($_SESSION['user_id'])):?>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
         <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarColor01">
@@ -31,3 +32,4 @@
           </div>
         </div>
     </nav>
+  <?php endif; ?>

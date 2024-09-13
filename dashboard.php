@@ -45,7 +45,31 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         $message = "Error signing out.";
     }
   }
+
+  if (isset($_POST['delete'])) {
+    $session_id = intval($_POST['session_id']); // Ensure $session_id is set and sanitized
+    
+    if ($session_id > 0) { // Check if a valid session ID is provided
+        try {
+            // Preparing the DELETE SQL statement
+            $stmt = $db->prepare("DELETE FROM user_sessions WHERE id = :id");
+            $stmt->bindParam(':id', $session_id, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                $message = "Session deleted successfully.";
+            } else {
+                $message = "ERROR: Unable to delete the session.";
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    } else {
+        $message = "Invalid session ID.";
+    }
 }
+
+  }
+
 
 // Get the current user's details
 $stmt=$db->prepare("SELECT*FROM staff_login where id=:user_id");
@@ -63,8 +87,9 @@ $username=$user['name'];
 </head>
 <body>
   <h2><b>Welcome, <?php echo $username;?>!</b></h2>
+  <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
 </body>
-<div class="container">
+<!-- <div class="container">
   <div class="row pt-5">
     <div class="col-md-2">
       <div class="container">
@@ -73,7 +98,7 @@ $username=$user['name'];
     </div>
     <div class="col-md-8"></div>
     <div class="col-md-2"></div>
-
+  </div> -->
 <div class="container">
   <div class="row pt-5">
     <div class="col-md-2"></div>
@@ -152,6 +177,7 @@ $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th scope="col">Id</th>
         <th scope="col">Check In Time</th>
         <th scope="col">Check Out Time</th>
+        <th scope="col">Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -161,6 +187,13 @@ $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <td><?php echo htmlspecialchars($session['id']); ?></td>
           <td><?php echo htmlspecialchars($session['check_in_time']); ?></td>
           <td><?php echo htmlspecialchars($session['check_out_time']); ?></td>
+          <td>
+            <form method="post" action="">
+              <!-- Hidden input to store the session ID -->
+               <input type="hidden" name="session_id" value="<?php echo htmlspecialchars($session['id']);?>">
+               <button type="submit" name="delete">Delete</button>
+            </form>
+          </td>
         </tr>
       </tr>
     </tbody>
