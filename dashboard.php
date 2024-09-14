@@ -99,6 +99,7 @@ $username=$user['name'];
     <div class="col-md-8"></div>
     <div class="col-md-2"></div>
   </div> -->
+  <!-- table to display all members present  or registered-->
 <div class="container">
   <div class="row pt-5">
     <div class="col-md-2"></div>
@@ -146,6 +147,7 @@ $username=$user['name'];
 
 
 <?php if (isset($message)) echo "<p>$message</p>"; ?>
+<!-- display current session details -->
 <div class="container">
   <h3><b>Current Session Details</b></h3>
   <?php
@@ -162,6 +164,7 @@ $username=$user['name'];
   }
   ?>
       
+<!-- display previous session details -->
 <h3><b>Previous Sessions:</b></h3>
 <?php 
 $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id AND check_out_time IS NOT NULL ORDER BY check_in_time DESC");
@@ -170,6 +173,7 @@ $stmt->execute();
 $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<!-- table to display previous sessions  -->
 <div class="container">
   <table class="table table-hover">
     <thead>
