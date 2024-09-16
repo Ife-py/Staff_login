@@ -3,6 +3,7 @@ include("views/header.php") ?>
 
 <div class="welcome-text">
 
+    <!-- form to sign up new users -->
     <div class="container">
         <div class="row pt-5">
             <div class="col-md-3"></div>

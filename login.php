@@ -1,7 +1,7 @@
 <?php
 include("./views/header.php");
 ?>
-
+<!-- form to take in input from user -->
 <div class="container">
   <div class="row pt-5">
     <div class="col-md-3"></div>
