@@ -66,9 +66,35 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     } else {
         $message = "Invalid session ID.";
     }
+  }
+
+  if(isset($_POST['Todo_text']) && isset($_POST['options'])) {
+    $user_id = $_SESSION['user_id'];
+
+    try {
+        // Prepare the SQL statement to insert user's todo list into the todo table
+        $stmt = $db->prepare("INSERT INTO todo (user_id, Todo_text, options) VALUES (:user_id, :Todo_text, :options)");
+
+        // Execute the prepared statement with bound parameters
+        $stmt->execute([
+            ':user_id' => $user_id,
+            ':Todo_text' => htmlspecialchars($_POST['Todo_text']),
+            ':options' => htmlspecialchars($_POST['options'])
+        ]);
+
+        // Check if the row was successfully inserted
+        if ($stmt->rowCount() > 0) {
+            $message = "You have successfully added a new to-do item.";
+        } else {
+            $message = "Error adding your to-do item.";
+        }
+    } catch (PDOException $e) {
+        // Handle any database-related errors
+        $message = "Database error: " . $e->getMessage();
+    }
 }
 
-  }
+}
 
 
 // Get the current user's details
@@ -79,6 +105,12 @@ $user=$stmt->fetch(PDO::FETCH_ASSOC);
 
 // display the username
 $username=$user['name'];
+// Get the member detail for the current user
+$stmt=$db->prepare("SELECT*FROM staff_login where id=:user_id");
+$stmt->bindParam(':user_id',$user_id);
+$stmt->execute();
+$member=$stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +136,11 @@ $username=$user['name'];
   <div class="row pt-5">
     <div class="col-md-2"></div>
     <div class="col-md-8"></div>
+    <?php if (empty($member)): ?>
+      <tr>
+          <td colspan="3">No members found.</td>
+      </tr>
+    <?php endif; ?>
       <table class="table table-hover">
         <thead>
           <tr class="table-primary">
@@ -115,33 +152,42 @@ $username=$user['name'];
           </tr>
         </thead>
         <tbody>
-            <?php $members=get_members($db) ?>
-            <tr class="table-secondary">
-            <?php foreach($members as $member): ?>
-            <tr>
-              <td><?php echo htmlspecialchars($member['name']); ?></td>
-              <td><?php echo htmlspecialchars($member['email']); ?></td>
-              <td><?php echo htmlspecialchars($member['contents']); ?></td>
-              <td>
-                <form method="post" action="">
-                  <button type="submit" name="sign_in">Sign In</button>
-                </form>
-              </td>
-              <td>
-                <form method="post" action="">
-                  <button type="submit" name="sign_out">Sign Out</button>
-                </form>
-              </td>
-            </tr>
-            <?php endforeach ;?>
-            <?php if (empty($members)): ?>
-                <tr>
-                    <td colspan="3">No members found.</td>
-                </tr>
-            <?php endif; ?>
+            <?php if($member):?>
+              <tr>
+                <td><?php echo htmlspecialchars($member['name']); ?></td>
+                <td><?php echo htmlspecialchars($member['email']); ?></td>
+                <td><?php echo htmlspecialchars($member['contents']); ?></td>
+                <td>
+                  <form method="post" action="">
+                    <button type="submit" name="sign_in">Sign In</button>
+                  </form>
+                </td>
+                <td>
+                  <form method="post" action="">
+                    <button type="submit" name="sign_out">Sign Out</button>
+                  </form>
+                </td>
+              </tr>
+            <?php endif ;?>
         </tbody>
       </table>
   </div>
+  <form action="" method="post">
+  <p>Form to record your todo item</p>
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control" id="Input" name="Todo_text" placeholder="Type in your to do item here:">
+    <label for="Input">ToDo:</label>
+  </div>
+  <div>
+    <label for="options" class="form-label mt-4"><b>Select your Category</b></label>
+    <select class="form-select" id="options" name="options">
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+    </select>
+  </div>
+  <input type="submit" value="submit">
+</form> 
   <div class="col-md-2"></div>
   </div>
 

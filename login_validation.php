@@ -19,7 +19,7 @@ function form_handling($db){
 
     try {
         // Query the database for email and password
-       $stmt = $db->prepare("SELECT id, email, password FROM staff_login WHERE email = :email");
+        $stmt = $db->prepare("SELECT id, email, password FROM staff_login WHERE email = :email");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,7 +27,7 @@ function form_handling($db){
         if ($row && $row['password'] === $password){
             $_SESSION['user_id'] = $row['id'];
             echo "<script>
-                    alert('Form submitted successfully!');
+                    alert('Login successful!');
                     window.location.href = 'dashboard.php';
                   </script>";
         } else {
