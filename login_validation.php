@@ -26,14 +26,15 @@ function form_handling($db){
 
         if ($row && $row['password'] === $password){
             $_SESSION['user_id'] = $row['id'];
-            echo "<script>
-                    alert('Login successful!');
-                    window.location.href = 'dashboard.php';
-                  </script>";
+            echo "
+            Login successful!;
+            <script>
+                window.location.href = 'dashboard.php';
+            </script>";
         } else {
             echo "
+            Login failed. Invalid email or password!
             <script>
-                alert('Login failed. Invalid email or password!');
                 window.location.href = 'login.php';
             </script>";
             ;

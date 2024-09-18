@@ -69,19 +69,18 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
   }
 
   if(isset($_POST['Todo_text']) && isset($_POST['options'])) {
-    $user_id = $_SESSION['user_id'];
-
+    $todo_text=$_POST['Todo_text'];
+    $options=$_POST['options'];
     try {
         // Prepare the SQL statement to insert user's todo list into the todo table
-        $stmt = $db->prepare("INSERT INTO todo (user_id, Todo_text, options) VALUES (:user_id, :Todo_text, :options)");
+        $stmt = $db->prepare("INSERT INTO todo (`user_id`, `Todo_text`, `options`) VALUES (:user_id, :Todo_text, :options)");
 
         // Execute the prepared statement with bound parameters
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':Todo_text' => htmlspecialchars($_POST['Todo_text']),
-            ':options' => htmlspecialchars($_POST['options'])
-        ]);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':Todo_text' ,$todo_text);
+        $stmt->bindParam(':options',$options);
 
+        $stmt->execute();
         // Check if the row was successfully inserted
         if ($stmt->rowCount() > 0) {
             $message = "You have successfully added a new to-do item.";
@@ -98,6 +97,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 
 // Get the current user's details
+
 $stmt=$db->prepare("SELECT*FROM staff_login where id=:user_id");
 $stmt->bindParam(':user_id',$user_id);
 $stmt->execute();
@@ -121,17 +121,6 @@ $member=$stmt->fetch(PDO::FETCH_ASSOC);
   <h2><b>Welcome, <?php echo $username;?>!</b></h2>
   <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
 </body>
-<!-- <div class="container">
-  <div class="row pt-5">
-    <div class="col-md-2">
-      <div class="container">
-        <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
-      </div>
-    </div>
-    <div class="col-md-8"></div>
-    <div class="col-md-2"></div>
-  </div> -->
-  <!-- table to display all members present  or registered-->
 <div class="container">
   <div class="row pt-5">
     <div class="col-md-2"></div>
@@ -173,22 +162,22 @@ $member=$stmt->fetch(PDO::FETCH_ASSOC);
       </table>
   </div>
   <form action="" method="post">
-  <p>Form to record your todo item</p>
-  <div class="form-floating mb-3">
-    <input type="text" class="form-control" id="Input" name="Todo_text" placeholder="Type in your to do item here:">
-    <label for="Input">ToDo:</label>
-  </div>
-  <div>
-    <label for="options" class="form-label mt-4"><b>Select your Category</b></label>
-    <select class="form-select" id="options" name="options">
-        <option>Low</option>
-        <option>Medium</option>
-        <option>High</option>
-    </select>
-  </div>
-  <input type="submit" value="submit">
-</form> 
-  <div class="col-md-2"></div>
+    <p>Form to record your todo item</p>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="Input" name="Todo_text" placeholder="Type in your to do item here:">
+      <label for="Input"name="T">ToDo:</label>
+    </div>
+    <div>
+      <label for="options" class="form-label mt-4"><b>Select your Category</b></label>
+      <select class="form-select" id="options" name="options">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+      </select>
+    </div>
+    <input type="submit" value="submit">
+  </form> 
+  <div class="col-md-6"></div>
   </div>
 
 
@@ -208,10 +197,10 @@ $member=$stmt->fetch(PDO::FETCH_ASSOC);
   } else {
     echo "<p><b>No session data available.</b></p>";
   }
-  ?>
+?>
       
 <!-- display previous session details -->
-<h3><b>Previous Sessions:</b></h3>
+
 <?php 
 $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id AND check_out_time IS NOT NULL ORDER BY check_in_time DESC");
 $stmt->bindParam(':user_id', $user_id);
@@ -222,6 +211,7 @@ $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!-- table to display previous sessions  -->
 <div class="container">
   <table class="table table-hover">
+    <h3><b>Previous Sessions:</b></h>
     <thead>
       <tr class="table-primary">
         <th scope="col">Id</th>
@@ -248,6 +238,38 @@ $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </tr>
     </tbody>
     <?php } ?>
+
+    <!-- display user to-do-list items -->
+<?php 
+$stmt = $db->prepare("SELECT * FROM todo WHERE user_id = :user_id AND Todo_text IS NOT NULL ORDER BY options DESC");
+$stmt->bindParam(':user_id', $user_id);
+$stmt->execute();
+$previousitems = $stmt->fetchAll(PDO::FETCH_ASSOC)
+?>
+<div class="container">
+  <table class="table table-hover">
+        <h3>Registered todo item</h3>
+    <thead>
+      <tr class="table-primary">
+        <th scope="col">Id</th>
+        <th scope="col">To-do-item</th>
+        <th scope="col">Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table-secondary">
+        <?php foreach($previousitems as $items){?>
+          <tr>
+            <td><?php echo htmlspecialchars($items['id']);?>
+            <td><?php echo htmlspecialchars($items['Todo_text']);?>
+            <td><?php echo htmlspecialchars($items['options']);?>
+          </tr>
+      </tr>
+    </tbody>
+    <?php } ?>
+  </table>
+</div>
+
 
 </body>
 </html>
