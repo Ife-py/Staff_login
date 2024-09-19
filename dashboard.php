@@ -118,158 +118,146 @@ $member=$stmt->fetch(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
 </head>
 <body>
-  <h2><b>Welcome, <?php echo $username;?>!</b></h2>
   <a href="logout.php" class="btn btn-primary" style="float:right">Logout</a>
-</body>
-<div class="container">
-  <div class="row pt-5">
-    <div class="col-md-2"></div>
-    <div class="col-md-8"></div>
-    <?php if (empty($member)): ?>
-      <tr>
-          <td colspan="3">No members found.</td>
-      </tr>
-    <?php endif; ?>
-      <table class="table table-hover">
-        <thead>
-          <tr class="table-primary">
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Brief introduction</th>
-            <th scope="col">Sign in</th>
-            <th scope="col">Sign Out</th>
-          </tr>
-        </thead>
-        <tbody>
-            <?php if($member):?>
-              <tr>
-                <td><?php echo htmlspecialchars($member['name']); ?></td>
-                <td><?php echo htmlspecialchars($member['email']); ?></td>
-                <td><?php echo htmlspecialchars($member['contents']); ?></td>
-                <td>
-                  <form method="post" action="">
-                    <button type="submit" name="sign_in">Sign In</button>
-                  </form>
-                </td>
-                <td>
-                  <form method="post" action="">
-                    <button type="submit" name="sign_out">Sign Out</button>
-                  </form>
-                </td>
-              </tr>
-            <?php endif ;?>
-        </tbody>
-      </table>
-  </div>
-  <form action="" method="post">
-    <p>Form to record your todo item</p>
-    <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="Input" name="Todo_text" placeholder="Type in your to do item here:">
-      <label for="Input"name="T">ToDo:</label>
-    </div>
-    <div>
-      <label for="options" class="form-label mt-4"><b>Select your Category</b></label>
-      <select class="form-select" id="options" name="options">
-          <option>Low</option>
-          <option>Medium</option>
-          <option>High</option>
-      </select>
-    </div>
-    <input type="submit" value="submit">
-  </form> 
-  <div class="col-md-6"></div>
-  </div>
-
-
-<?php if (isset($message)) echo "<p>$message</p>"; ?>
-<!-- display current session details -->
-<div class="container">
-  <h3><b>Current Session Details</b></h3>
-  <?php
-  $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id ORDER BY id DESC LIMIT 1");
-  $stmt->bindParam(':user_id', $user_id);
-  $stmt->execute();
-  $lastSession = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  if ($lastSession) {
-    echo "<p><b>Sign-in Time:</b> " . ($lastSession['check_in_time'] ? $lastSession['check_in_time'] : "N/A") . "</p>";
-    echo "<p><b>Sign-out Time: </b>" . ($lastSession['check_out_time'] ? $lastSession['check_out_time'] : "N/A") . "</p>";
-  } else {
-    echo "<p><b>No session data available.</b></p>";
-  }
-?>
-      
-<!-- display previous session details -->
-
-<?php 
-$stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id AND check_out_time IS NOT NULL ORDER BY check_in_time DESC");
-$stmt->bindParam(':user_id', $user_id);
-$stmt->execute();
-$previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<!-- table to display previous sessions  -->
-<div class="container">
-  <table class="table table-hover">
-    <h3><b>Previous Sessions:</b></h>
-    <thead>
-      <tr class="table-primary">
-        <th scope="col">Id</th>
-        <th scope="col">Check In Time</th>
-        <th scope="col">Check Out Time</th>
-        <th scope="col">Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="table-secondary">
-      <?php foreach($previousSessions as $session) {?>
-        <tr>
-          <td><?php echo htmlspecialchars($session['id']); ?></td>
-          <td><?php echo htmlspecialchars($session['check_in_time']); ?></td>
-          <td><?php echo htmlspecialchars($session['check_out_time']); ?></td>
-          <td>
-            <form method="post" action="">
-              <!-- Hidden input to store the session ID -->
-               <input type="hidden" name="session_id" value="<?php echo htmlspecialchars($session['id']);?>">
-               <button type="submit" name="delete">Delete</button>
-            </form>
-          </td>
-        </tr>
-      </tr>
-    </tbody>
-    <?php } ?>
-
-    <!-- display user to-do-list items -->
-<?php 
-$stmt = $db->prepare("SELECT * FROM todo WHERE user_id = :user_id AND Todo_text IS NOT NULL ORDER BY options DESC");
-$stmt->bindParam(':user_id', $user_id);
-$stmt->execute();
-$previousitems = $stmt->fetchAll(PDO::FETCH_ASSOC)
-?>
-<div class="container">
-  <table class="table table-hover">
-        <h3>Registered todo item</h3>
-    <thead>
-      <tr class="table-primary">
-        <th scope="col">Id</th>
-        <th scope="col">To-do-item</th>
-        <th scope="col">Priority</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="table-secondary">
-        <?php foreach($previousitems as $items){?>
+  <div class="container">
+    <h3><b>Welcome, <?php echo $username;?>!</b></h3>
+    <div class="row">
+      <div class="col-md-8">
+        <?php if (empty($member)): ?>
           <tr>
-            <td><?php echo htmlspecialchars($items['id']);?>
-            <td><?php echo htmlspecialchars($items['Todo_text']);?>
-            <td><?php echo htmlspecialchars($items['options']);?>
+              <td colspan="3">No members found.</td>
           </tr>
-      </tr>
-    </tbody>
-    <?php } ?>
-  </table>
-</div>
+        <?php endif; ?>
+        <table class="table table-hover">
+          <thead>
+            <tr class="table-primary">
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Brief introduction</th>
+              <th scope="col">Sign in</th>
+              <th scope="col">Sign Out</th>
+            </tr>
+          </thead>
+          <tbody>
+              <?php if($member):?>
+                <tr>
+                  <td><?php echo htmlspecialchars($member['name']); ?></td>
+                  <td><?php echo htmlspecialchars($member['email']); ?></td>
+                  <td><?php echo htmlspecialchars($member['contents']); ?></td>
+                  <td>
+                    <form method="post" action="">
+                      <button class="btn btn-primary" type="submit" name="sign_in">Sign In</button>
+                    </form>
+                  </td>
+                  <td>
+                    <form method="post" action="">
+                      <button class="btn btn-secondary" type="submit" name="sign_out">Sign Out</button>
+                    </form>
+                  </td>
+                </tr>
+              <?php endif ;?>
+          </tbody>
+        </table>
+        <div class="card mb-1">
+          <div class="card-header">
+            <p>Form to record your todo item</p>
+          </div>
+          <div class="card-body">
+            <form action="" method="post">
+              
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="Input" name="Todo_text" placeholder="Type in your to do item here:">
+                <label for="Input"name="T">To-Do:</label>
+              </div>
+              <div>
+                <label for="options" class="form-label mt-4"><b>Select your Category</b></label>
+                <select class="form-select" id="options" name="options">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+              </div>
+              <input type="submit" value="submit">
+            </form>
+          </div>
+        </div>
+        <?php if (isset($message)) echo "<p>$message</p>"; ?>    
+        <!-- display previous session details -->
 
+          <?php 
+          $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id AND check_out_time IS NOT NULL ORDER BY check_in_time DESC");
+          $stmt->bindParam(':user_id', $user_id);
+          $stmt->execute();
+          $previousSessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+          ?>
 
+         <!-- table to display previous sessions  -->
+          <table class="table table-hover mb-1">
+            <div><b>Previous Sessions:</b></div>
+            <thead>
+              <tr class="table-primary">
+                <th scope="col">Id</th>
+                <th scope="col">Check In Time</th>
+                <th scope="col">Check Out Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-secondary">
+              <?php foreach($previousSessions as $session) {?>
+                <tr>
+                  <td><?php echo htmlspecialchars($session['id']); ?></td>
+                  <td><?php echo htmlspecialchars($session['check_in_time']); ?></td>
+                  <td><?php echo htmlspecialchars($session['check_out_time']); ?></td>
+                </tr>
+              </tr>
+              <?php } ?>
+              </tbody>
+          </table>
+          
+
+      </div>
+      <div class="col-md-4"> 
+        <!-- display user to-do-list items -->
+        <?php 
+        $stmt = $db->prepare("SELECT * FROM todo WHERE user_id = :user_id AND Todo_text IS NOT NULL ORDER BY options DESC");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        $previousitems = $stmt->fetchAll(PDO::FETCH_ASSOC)
+        ?>
+        <table class="table table-hover">
+          <h3><b>Recorded To-do item</b></h3>
+          <thead>
+            <tr class="table-primary">
+              <th scope="col">To-do-item</th>
+              <th scope="col">Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-secondary">
+              <?php foreach($previousitems as $items){?>
+                <tr> 
+                  <td><?php echo htmlspecialchars($items['Todo_text']);?></td>
+                  <td><?php echo htmlspecialchars($items['options']);?></td>
+                </tr>
+            </tr>
+          </tbody>
+            <?php } ?>
+        </table>
+        <!-- display current session details -->
+        <h4><b>Current Session Details</b></h4>
+          <?php
+          $stmt = $db->prepare("SELECT * FROM user_sessions WHERE user_id = :user_id ORDER BY id DESC LIMIT 1");
+          $stmt->bindParam(':user_id', $user_id);
+          $stmt->execute();
+          $lastSession = $stmt->fetch(PDO::FETCH_ASSOC);
+
+          if ($lastSession) {
+            echo "<p><b>Sign-in Time:</b> " . ($lastSession['check_in_time'] ? $lastSession['check_in_time'] : "N/A") . "</p>";
+            echo "<p><b>Sign-out Time: </b>" . ($lastSession['check_out_time'] ? $lastSession['check_out_time'] : "N/A") . "</p>";
+          } else {
+            echo "<p><b>No session data available.</b></p>";
+          }
+        ?>
+      </div>
 </body>
-</html>
+</html> 

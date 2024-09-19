@@ -2,6 +2,7 @@
 include("views/header.php") ?>
 
 <div class="welcome-text">
+    
 
     <!-- form to sign up new users -->
     <div class="container">
