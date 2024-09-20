@@ -1,6 +1,31 @@
 <?php
 include("views/header.php") ?>
 
+<style>
+        body {
+            background-image: linear-gradient(to bottom, #f2f2f2, #fff);
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .card {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .form-control {
+            height: 40px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .btn-primary {
+            background-color: #337ab7;
+            border-color: #337ab7;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
 <div class="welcome-text">
     
 
@@ -10,7 +35,7 @@ include("views/header.php") ?>
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><b>Welcome To The Ozitech Team Sign Up Page</b></div>
+                    <div class="card-header bg-primary "><b>Welcome To The Ozitech Team Sign Up Page</b></div>
                     <div class="card-body">
                         <form action="form.php" method="post">
                             <fieldset>
