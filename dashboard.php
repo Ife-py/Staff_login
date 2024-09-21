@@ -1,3 +1,4 @@
+<!-- php codes to handle different sort of requests sent -->
 <?php 
   session_start();
   include("./views/header.php");
@@ -10,6 +11,7 @@
   }
 
 
+  // getting the user_id info
   $user_id=$_SESSION['user_id'];
 
   if($_SERVER['REQUEST_METHOD']=='POST'){
@@ -111,6 +113,7 @@
   $member=$stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
+<!-- display settings using bootstrap classes -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
