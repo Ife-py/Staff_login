@@ -119,11 +119,11 @@
   <head>
     <meta charset="UTF-8">
     <style>
-      body {
-          background-image: linear-gradient(to bottom, #f2f2f2, #fff);
-          height: 100vh;
-          margin: 0;
-          padding: 0;
+    body {
+        background-image: linear-gradient(to bottom, #f2f2f2, #fff);
+        height: 100vh;
+        margin: 0;
+        padding: 0;
         }
     </style>
   </head>
