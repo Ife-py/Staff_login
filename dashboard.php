@@ -13,7 +13,7 @@
 
   // getting the user_id info
   $user_id=$_SESSION['user_id'];
-
+  // conditional statement to handle requests
   if($_SERVER['REQUEST_METHOD']=='POST'){
     if(isset($_POST['sign_in'])){
       // check if alerady signed in
