@@ -27,8 +27,6 @@ include("views/header.php") ?>
     }
 </style>
 <div class="welcome-text">
-    
-
     <!-- form to sign up new users -->
     <div class="container">
         <div class="row pt-5">
