@@ -2,30 +2,30 @@
 include("views/header.php") ?>
 
 <style>
-        body {
-            background-image: linear-gradient(to bottom, #f2f2f2, #fff);
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-        .card {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .card-body {
-            padding: 2rem;
-        }
-        .form-control {
-            height: 40px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        .btn-primary {
-            background-color: #337ab7;
-            border-color: #337ab7;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-    </style>
+    body {
+        background-image: linear-gradient(to bottom, #f2f2f2, #fff);
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    .card {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .form-control {
+        height: 40px;
+        padding: 10px;
+        font-size: 16px;
+    }
+    .btn-primary {
+        background-color: #337ab7;
+        border-color: #337ab7;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+</style>
 <div class="welcome-text">
     
 
